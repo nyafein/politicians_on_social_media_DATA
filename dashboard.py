@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 
 # ── Config ────────────────────────────────────────────────────────────────────
-FILE = r"C:\Users\nyafe\Data\politicians_on_social_media_DATA\matched.csv" 
+FILE = "matched.csv" 
 import streamlit as st
 import pandas as pd
 import plotly.express as px

@@ -210,11 +210,18 @@ st.plotly_chart(fig_time, use_container_width=True)
 # ── Language Distribution ─────────────────────────────────────────────────────
 st.subheader("Language Distribution")
 
+lang_country_opts = ["All"] + sorted(
+    posts_df[posts_df["Country"] != "Unknown"]["Country"].unique().tolist()
+)
+sel_lang_country = st.selectbox("Filter by country", lang_country_opts, key="lang_country")
+
+lang_filtered = posts_df if sel_lang_country == "All" else posts_df[posts_df["Country"] == sel_lang_country]
+
 lc1, lc2 = st.columns(2)
 
 with lc1:
-    st.markdown("**Overall**")
-    lang_overall = posts_df["lang"].value_counts().reset_index()
+    st.markdown(f"**Overall{' — ' + sel_lang_country if sel_lang_country != 'All' else ''}**")
+    lang_overall = lang_filtered["lang"].value_counts().reset_index()
     lang_overall.columns = ["Language", "Count"]
     fig_lang = px.bar(
         lang_overall.head(15), x="Language", y="Count",
@@ -227,7 +234,7 @@ with lc1:
 with lc2:
     st.markdown("**By Country**")
     lang_country = (
-        posts_df[posts_df["Country"] != "Unknown"]
+        lang_filtered[lang_filtered["Country"] != "Unknown"]
         .groupby(["Country", "lang"])
         .size().reset_index(name="Count")
     )
